@@ -4,37 +4,59 @@ import java.util.Scanner;
 
 public class Main {
 
-    static Scanner in = new Scanner(System.in);
-    static int n = 2, m = 3;
+    private static int[] lineOrder;
+    private static int[] columnOrder;
+    private static String input;
+    private static Scanner in = new Scanner(System.in);
+    private static int n, m;
 
     public static void main (String[] args) {
-        String input = in.next();
-        if (input.length() == 0) {
-            System.out.println("Please type non-zero length string");
-            return;
+        System.out.println("First of all type \"E\" if you want to encrypt "
+            + "text or type \"D\" if you want do decrypt encrypted text");
+
+        boolean isEncryption = setEncryption();
+
+        initialize();
+
+        String result;
+        if (isEncryption) {
+            result = encrypt(input);
+        } else {
+            result = decrypt(input);
         }
 
-        setNM(input.length());
-        String result = encrypt(input);
-
-        decrypt(result);
+        System.out.println(
+            (isEncryption ? "Encrypted " : "Decrypted ") + " " + "string is\n "
+                + result);
     }
 
-    private static void setNM (int strLen) {
-        n = (int)Math.sqrt(strLen);
-        m = (int)Math.ceil(strLen / n);
+    private static boolean setEncryption () {
+        String s;
+        do {
+            s = in.next();
+            s = s.toUpperCase();
+        } while (!"E".equals(s) && !"D".equals(s));
+
+        return "E".equals(s);
+    }
+
+    private static void initialize () {
+        do {
+            promptForUserString();
+            input = in.next();
+        } while (input.length() == 0);
+
+        setNM(input.length());
+
+        lineOrder = new int[n];
+        columnOrder = new int[m];
+        promptForNumbers(n, m);
+        do {
+            initUserSequences();
+        } while (!validateSequences());
     }
 
     private static String encrypt (String input) {
-        int[] lineOrder = new int[n];
-        int[] columnOrder = new int[m];
-        for (int i = 0; i < n; i++) {
-            lineOrder[i] = in.nextInt() - 1;
-        }
-        for (int i = 0; i < m; i++) {
-            columnOrder[i] = in.nextInt() - 1;
-        }
-
         char[][] matrix = new char[n][m];
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < m; j++) {
@@ -44,7 +66,6 @@ public class Main {
             }
         }
 
-        show(matrix);
         StringBuilder result = new StringBuilder();
         for (int j = 0; j < m; j++) {
             for (int i = 0; i < n; i++) {
@@ -52,21 +73,10 @@ public class Main {
             }
         }
 
-        System.out.println(result.toString());
         return result.toString();
     }
 
     private static String decrypt (String input) {
-        int[] lineOrder = new int[n];
-        int[] columnOrder = new int[m];
-
-        for (int i = 0; i < n; i++) {
-            lineOrder[i] = in.nextInt() - 1;
-        }
-        for (int i = 0; i < m; i++) {
-            columnOrder[i] = in.nextInt() - 1;
-        }
-
         char[][] matrix = new char[n][m];
         for (int j = 0; j < m; j++) {
             for (int i = 0; i < n; i++) {
@@ -76,15 +86,76 @@ public class Main {
             }
         }
 
-        show(matrix);
         StringBuilder result = new StringBuilder();
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < m; j++) {
                 result.append(matrix[lineOrder[i]][j]);
             }
         }
-        System.out.println(result.toString());
+
         return result.toString();
+    }
+
+    private static void promptForUserString () {
+        System.out.println("Please type non-zero length string");
+    }
+
+    private static void setNM (int strLen) {
+        n = (int)Math.sqrt(strLen);
+        m = (int)Math.ceil(strLen / n);
+    }
+
+    private static void promptForNumbers (int n, int m) {
+        System.out.println("Please input " + n + " numbers from 1 to " + n +
+            " in arbitrary order" +
+            "\n" + " and " + m + " numbers from 1 to " + m + ""
+            + " in arbitrary order");
+    }
+
+    private static void initUserSequences () {
+        for (int i = 0; i < n; i++) {
+            lineOrder[i] = in.nextInt() - 1;
+        }
+        for (int i = 0; i < m; i++) {
+            columnOrder[i] = in.nextInt() - 1;
+        }
+    }
+
+    private static boolean validateSequences () {
+        return validateLineOrder() && validateColumnOrder();
+    }
+
+    private static boolean validateLineOrder () {
+        int[] test = new int[n];
+        for (int i = 0; i < lineOrder.length; i++) {
+            if (0 <= lineOrder[i] && lineOrder[i] < n) {
+                test[i]++;
+            }
+        }
+        for (int b : test) {
+            if (b != 1) {
+                System.out.println("Please input only numbers from 1 to " + n);
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    private static boolean validateColumnOrder () {
+        int[] test = new int[m];
+        for (int i = 0; i < columnOrder.length; i++) {
+            if (0 <= columnOrder[i] && columnOrder[i] < m) {
+                test[i]++;
+            }
+        }
+        for (int b : test) {
+            if (b != 1) {
+                System.out.println("Please input only numbers from 1 to " + m);
+                return false;
+            }
+        }
+        return true;
     }
 
     private static void show (char[][] matrix) {
