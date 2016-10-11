@@ -50,7 +50,7 @@ public class Main {
 
         lineOrder = new int[n];
         columnOrder = new int[m];
-        promptForNumbers(n, m);
+        promptForNumbers();
         do {
             initUserSequences();
         } while (!validateSequences());
@@ -105,7 +105,7 @@ public class Main {
         m = (int)Math.ceil(strLen / (double)n);
     }
 
-    private static void promptForNumbers (int n, int m) {
+    private static void promptForNumbers () {
         System.out.println("Please input " + n + " numbers from 1 to " + n +
             " in arbitrary order" +
             "\n" + " and " + m + " numbers from 1 to " + m + ""
@@ -127,14 +127,14 @@ public class Main {
 
     private static boolean validateLineOrder () {
         int[] test = new int[n];
-        for (int i = 0; i < lineOrder.length; i++) {
-            if (0 <= lineOrder[i] && lineOrder[i] < n) {
-                test[i]++;
+        for (int aLineOrder : lineOrder) {
+            if (0 <= aLineOrder && aLineOrder < n) {
+                test[aLineOrder]++;
             }
         }
         for (int b : test) {
             if (b != 1) {
-                System.out.println("Please input only numbers from 1 to " + n);
+                promptForNumbers();
                 return false;
             }
         }
@@ -144,14 +144,15 @@ public class Main {
 
     private static boolean validateColumnOrder () {
         int[] test = new int[m];
-        for (int i = 0; i < columnOrder.length; i++) {
-            if (0 <= columnOrder[i] && columnOrder[i] < m) {
-                test[i]++;
+        for (int aColumnOrder : columnOrder) {
+            if (0 <= aColumnOrder && aColumnOrder < m) {
+                test[aColumnOrder]++;
             }
         }
         for (int b : test) {
             if (b != 1) {
                 System.out.println("Please input only numbers from 1 to " + m);
+                promptForNumbers();
                 return false;
             }
         }
