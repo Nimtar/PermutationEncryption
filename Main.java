@@ -41,9 +41,9 @@ public class Main {
     }
 
     private static void initialize () {
+        promptForUserString();
         do {
-            promptForUserString();
-            input = in.next();
+            input = in.nextLine();
         } while (input.length() == 0);
 
         setNM(input.length());
@@ -97,12 +97,12 @@ public class Main {
     }
 
     private static void promptForUserString () {
-        System.out.println("Please type non-zero length string");
+        System.out.print("Please type non-zero length string\n");
     }
 
     private static void setNM (int strLen) {
         n = (int)Math.sqrt(strLen);
-        m = (int)Math.ceil(strLen / n);
+        m = (int)Math.ceil(strLen / (double)n);
     }
 
     private static void promptForNumbers (int n, int m) {
