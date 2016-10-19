@@ -18,15 +18,10 @@ public class Main {
 
         initialize();
 
-        String result;
-        if (isEncryption) {
-            result = encrypt(input);
-        } else {
-            result = decrypt(input);
-        }
+        String result = isEncryption ? encrypt(input) : decrypt(input);
 
         System.out.println(
-            (isEncryption ? "Encrypted " : "Decrypted ") + " " + "string is\n "
+            (isEncryption ? "Encrypted " : "Decrypted ") + "string is\n "
                 + result);
     }
 
@@ -72,7 +67,6 @@ public class Main {
                 result.append(matrix[i][columnOrder[j]]);
             }
         }
-
         return result.toString();
     }
 
@@ -92,7 +86,6 @@ public class Main {
                 result.append(matrix[lineOrder[i]][j]);
             }
         }
-
         return result.toString();
     }
 
@@ -138,7 +131,6 @@ public class Main {
                 return false;
             }
         }
-
         return true;
     }
 
@@ -157,14 +149,5 @@ public class Main {
             }
         }
         return true;
-    }
-
-    private static void show (char[][] matrix) {
-        for (int i = 0; i < 2; i++) {
-            for (int j = 0; j < 3; j++) {
-                System.out.print(matrix[i][j]);
-            }
-            System.out.println();
-        }
     }
 }
